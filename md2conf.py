@@ -57,7 +57,9 @@ PARSER.add_argument('-l', '--loglevel', default='INFO',
                     help='Use this option to set the log verbosity.')
 PARSER.add_argument('-s', '--simulate', action='store_true', default=False,
                     help='Use this option to only show conversion result.')
-
+PARSER.add_argument('--codetheme', action='store', default='Midnight',
+                    choices=['DJango', 'Emacs', 'FadeToGrey', 'Midnight', 'RDark', 'Eclipse', 'Confluence'],
+                    help='Use this option to use a specific code block theme. Default is Midnight')
 
 ARGS = PARSER.parse_args()
 
@@ -78,6 +80,7 @@ try:
     ATTACHMENTS = ARGS.attachment
     GO_TO_PAGE = not ARGS.nogo
     CONTENTS = ARGS.contents
+    CODETHEME = ARGS.codetheme
 
     if USERNAME is None:
         LOGGER.error('Error: Username not specified by environment variable or option.')
@@ -137,7 +140,7 @@ def convert_code_block(html):
         for tag in code_blocks:
 
             conf_ml = '<ac:structured-macro ac:name="code">'
-            conf_ml = conf_ml + '<ac:parameter ac:name="theme">Midnight</ac:parameter>'
+            conf_ml = conf_ml + '<ac:parameter ac:name="theme">' + CODETHEME + '</ac:parameter>'
             conf_ml = conf_ml + '<ac:parameter ac:name="linenumbers">true</ac:parameter>'
 
             lang = re.search('code class="(.*)"', tag)
